@@ -23,5 +23,6 @@
   "dependencies": {
     "@slack/web-api": "5.1.0",
     "lodash.chunk": "4.2.0"
-  }
+  },
+  "main": "gatsby-node.js"
 }
