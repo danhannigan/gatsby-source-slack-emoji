@@ -24,5 +24,13 @@
     "@slack/web-api": "5.1.0",
     "lodash.chunk": "4.2.0"
   },
+  "scripts": {
+    "build": "babel src --out-dir .",
+    "prepublish": "yarn build"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5"
+  },
   "main": "gatsby-node.js"
 }
