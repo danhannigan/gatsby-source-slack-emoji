@@ -1,6 +1,6 @@
 {
   "name": "gatsby-source-slack-emoji",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Gatsby source plugin for getting Emojis from Slack.",
   "author": {
     "name": "Dan Hannigan",
@@ -25,15 +25,11 @@
     "gatsby-source-filesystem": "^2.1.18",
     "lodash.chunk": "4.2.0"
   },
-  "main": "./dist/gatsby-node.js",
-  "files": [
-    "dist/"
-  ],
+  "main": "gatsby-node.js",
   "scripts": {
-    "clean": "rm -rf ./dist",
-    "build": "babel src --out-dir ./dist --ignore __tests__",
+    "build": "babel src --out-dir . --ignore __tests__",
     "prepare": "yarn build",
-    "watch": "babel -w src --out-dir ./dist --ignore **/__tests__"
+    "watch": "babel -w src --out-dir . --ignore **/__tests__"
   },
   "devDependencies": {
     "@babel/cli": "^7.5.5",
