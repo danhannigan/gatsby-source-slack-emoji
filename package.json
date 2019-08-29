@@ -25,14 +25,14 @@
     "gatsby-source-filesystem": "^2.1.18",
     "lodash.chunk": "4.2.0"
   },
-  "main": "dist/gatsby-node.js",
+  "main": "./dist/gatsby-node.js",
   "files": [
     "dist/"
   ],
   "scripts": {
     "clean": "rm -rf ./dist",
     "build": "babel src --out-dir ./dist --ignore __tests__",
-    "prepublish": "yarn build",
+    "prepare": "yarn build",
     "watch": "babel -w src --out-dir ./dist --ignore **/__tests__"
   },
   "devDependencies": {
