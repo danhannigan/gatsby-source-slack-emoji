@@ -24,3 +24,32 @@ module.exports = {
   ],
 }
 ```
+
+### Querying Data
+
+```javascript
+// In your page
+allFile(filter: {fields: {SlackEmoji: {eq: "true"}}}) {
+    edges {
+      node {
+        fields {
+          SlackEmoji
+        }
+        name
+        publicURL
+      }
+    }
+  }
+```
+
+### Using in a page
+```javascript
+const Emojis = data.allFile.edges
+// ...
+{Emojis.map(emoji => (
+  <div key={emoji.node.id}>
+    <img src={emoji.node.publicURL} alt={emoji.node.name} />
+    <div>:{emoji.node.name}:</div>
+  </div>
+))}
+```

@@ -1,16 +1,13 @@
 const { createRemoteFileNode } = require(`gatsby-source-filesystem`);
-const { WebClient } = require('@slack/web-api');
-
-
+const { WebClient } = require("@slack/web-api");
 
 async function fetchSlackEmoji(token) {
   const client = new WebClient(token);
-
   const response = await client.emoji.list();
-
   if (!response.ok) return null;
 
-  return response.emoji;
+  const filteredEmojis = Object.entries(response.emoji).filter(emoji => !emoji[1].includes("alias"));
+  return filteredEmojis;
 }
 
 exports.sourceNodes = async ({ actions, createNodeId, store, cache }, options = {}) => {
@@ -18,13 +15,9 @@ exports.sourceNodes = async ({ actions, createNodeId, store, cache }, options = 
   if (!token) throw new Error("No Slack Token set.");
 
   const { createNode, createNodeField } = actions;
-
   const emojiResponse = await fetchSlackEmoji(token);
-  const emojiList = await Object.entries(emojiResponse);
 
-  const filteredList = emojiList.filter(emoji => !emoji[1].includes('alias'));
-
-  for (const [name, url] of filteredList) {
+  for (const [name, url] of emojiResponse) {
     let fileNode;
     try {
       fileNode = await createRemoteFileNode({
@@ -33,10 +26,15 @@ exports.sourceNodes = async ({ actions, createNodeId, store, cache }, options = 
         store,
         createNode,
         createNodeId,
-        name: name,
+        name: name
+      });
+      await createNodeField({
+        node: fileNode,
+        name: "SlackEmoji",
+        value: "true"
       });
     } catch (error) {
-      console.warn('error creating node', error);
+      console.warn("error creating node", error);
     }
   }
-}
+};

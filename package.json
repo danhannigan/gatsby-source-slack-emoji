@@ -1,6 +1,6 @@
 {
   "name": "gatsby-source-slack-emoji",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Gatsby source plugin for getting Emojis from Slack.",
   "author": {
     "name": "Dan Hannigan",
@@ -22,8 +22,7 @@
   "repository": "https://github.com/danhannigan/gatsby-source-slack-emoji",
   "dependencies": {
     "@slack/web-api": "5.1.0",
-    "gatsby-source-filesystem": "^2.1.18",
-    "lodash.chunk": "4.2.0"
+    "gatsby-source-filesystem": "^2.1.18"
   },
   "main": "gatsby-node.js",
   "scripts": {
