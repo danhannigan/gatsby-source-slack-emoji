@@ -6,21 +6,35 @@ async function fetchSlackEmoji(token) {
   const response = await client.emoji.list();
   if (!response.ok) return null;
 
-  const filteredEmojis = Object.entries(response.emoji).filter(emoji => !emoji[1].includes("alias"));
+  const filteredEmojis = Object.entries(response.emoji).filter(
+    emoji => !emoji[1].includes("alias")
+  );
   return filteredEmojis;
 }
 
-exports.sourceNodes = async ({ actions, createNodeId, store, cache }, options = {}) => {
+exports.sourceNodes = async (
+  { actions, createNodeId, node, getNode, store, cache },
+  options = {}
+) => {
   const token = options.token || null;
   if (!token) throw new Error("No Slack Token set.");
 
-  const { createNode, createNodeField } = actions;
   const emojiResponse = await fetchSlackEmoji(token);
 
+  const { createNode, createNodeField, touchNode } = actions;
+
   for (const [name, url] of emojiResponse) {
-    let fileNode;
-    try {
-      fileNode = await createRemoteFileNode({
+    let fileNodeID;
+    const remoteDataCacheKey = `SlackEmojiUrl-${url}`;
+    const cacheRemoteData = await cache.get(remoteDataCacheKey);
+
+    if (cacheRemoteData) {
+      fileNodeID = cacheRemoteData.fileNodeID;
+      await touchNode({ nodeId: fileNodeID });
+    }
+
+    if (!fileNodeID) {
+      const fileNode = await createRemoteFileNode({
         url: url,
         cache,
         store,
@@ -33,8 +47,11 @@ exports.sourceNodes = async ({ actions, createNodeId, store, cache }, options = 
         name: "SlackEmoji",
         value: "true"
       });
-    } catch (error) {
-      console.warn("error creating node", error);
+
+      if (fileNode) {
+        fileNodeID = fileNode.id;
+        await cache.set(remoteDataCacheKey, { fileNodeID });
+      }
     }
   }
 };
